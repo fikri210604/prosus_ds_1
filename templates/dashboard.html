@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard — PredictApp{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Employee Attrition Dashboard</h1>
+    <p>Visualisasi data karyawan Dicoding (Attrition & Demographics)</p>
+</div>
+
+{% if data %}
+<!-- Summary Metrics Cards -->
+<div class="metrics-grid">
+    <div class="card metric-card">
+        <h3>Total Employees</h3>
+        <div class="metric-value">{{ data.metrics.total_employees }}</div>
+    </div>
+    <div class="card metric-card" style="border-left: 4px solid var(--accent); background-color: var(--accent-light);">
+        <h3 style="color: var(--accent);">Total Attrition (Resign)</h3>
+        <div class="metric-value" style="color: var(--accent);">{{ data.metrics.attrition_count }}</div>
+    </div>
+    <div class="card metric-card">
+        <h3>Attrition Rate</h3>
+        <div class="metric-value">{{ data.metrics.attrition_rate }}%</div>
+    </div>
+</div>
+
+<!-- Charts Grid -->
+<div class="charts-grid">
+    <!-- Chart 1: Attrition by Department -->
+    <div class="card chart-container">
+        <h3>Attrition by Department</h3>
+        <div style="position: relative; height: 300px; width: 100%;">
+            <canvas id="deptChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Chart 2: Attrition by Job Role -->
+    <div class="card chart-container">
+        <h3>Attrition by Job Role</h3>
+        <div style="position: relative; height: 300px; width: 100%;">
+            <canvas id="roleChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Chart 3: Avg Income by Attrition -->
+    <div class="card chart-container" style="grid-column: 1 / -1; max-width: 800px; margin: 0 auto;">
+        <h3>Average Monthly Income vs Attrition</h3>
+        <div style="position: relative; height: 300px; width: 100%;">
+            <canvas id="incomeChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Data Injection Point for Javascript -->
+<script type="application/json" id="dashboard-data">
+    {{ data | tojson }}
+</script>
+
+<!-- Initialize Charts -->
+<script>
+    // Ambil data JSON dari blok aplikasi khusus
+    const dashboardData = JSON.parse(document.getElementById('dashboard-data').textContent);
+
+    // Common Chart Options
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            }
+        }
+    };
+
+    // 1. Department Pie Chart
+    const deptCtx = document.getElementById('deptChart').getContext('2d');
+    new Chart(deptCtx, {
+        type: 'doughnut',
+        data: {
+            labels: dashboardData.chart_dept.labels,
+            datasets: [{
+                data: dashboardData.chart_dept.data,
+                backgroundColor: ['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#3b82f6'],
+                borderWidth: 1
+            }]
+        },
+        options: commonOptions
+    });
+
+    // 2. Job Role Bar Chart
+    const roleCtx = document.getElementById('roleChart').getContext('2d');
+    new Chart(roleCtx, {
+        type: 'bar',
+        data: {
+            labels: dashboardData.chart_role.labels,
+            datasets: [{
+                label: 'Number of Attritions',
+                data: dashboardData.chart_role.data,
+                backgroundColor: '#3b82f6',
+                borderRadius: 4
+            }]
+        },
+        options: Object.assign({}, commonOptions, {
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        })
+    });
+
+    // 3. Avg Income Bar Chart
+    const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+    new Chart(incomeCtx, {
+        type: 'bar',
+        data: {
+            labels: dashboardData.chart_income.labels,
+            datasets: [{
+                label: 'Average Monthly Income ($)',
+                data: dashboardData.chart_income.data,
+                backgroundColor: ['#10b981', '#ef4444'], // Green for Tetap, Red for Resign
+                borderRadius: 4
+            }]
+        },
+        options: Object.assign({}, commonOptions, {
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        })
+    });
+</script>
+
+{% else %}
+<div class="card" style="text-align: center; padding: 3rem;">
+    <h3>Tidak dapat memuat data dashboard.</h3>
+    <p>Pastikan koneksi internet tersedia untuk mengunduh dataset dari GitHub.</p>
+</div>
+{% endif %}
+
+{% endblock %}

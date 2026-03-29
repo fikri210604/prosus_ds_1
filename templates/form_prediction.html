@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}Prediction — PredictApp{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Prediction Form</h1>
+    <p>Masukkan data karyawan di bawah untuk memprediksi probabilitas <b>Attrition</b> (Resign).</p>
+</div>
+
+<div class="card form-container" style="max-width: 800px;">
+    <form action="{{ url_for('predict') }}" method="post">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <!-- Kiri -->
+            <div>
+                <div class="form-group">
+                    <label for="OverTime">OverTime (Kerja Lembur)</label>
+                    <select id="OverTime" name="OverTime" required>
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="BusinessTravel">Business Travel</label>
+                    <select id="BusinessTravel" name="BusinessTravel" required>
+                        <option value="Travel_Rarely">Travel Rarely</option>
+                        <option value="Travel_Frequently">Travel Frequently</option>
+                        <option value="Non-Travel">Non-Travel</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="MaritalStatus">Marital Status</label>
+                    <select id="MaritalStatus" name="MaritalStatus" required>
+                        <option value="Single">Single</option>
+                        <option value="Married">Married</option>
+                        <option value="Divorced">Divorced</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="EducationField">Education Field</label>
+                    <select id="EducationField" name="EducationField" required>
+                        <option value="Life Sciences">Life Sciences</option>
+                        <option value="Medical">Medical</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Technical Degree">Technical Degree</option>
+                        <option value="Other">Other</option>
+                        <option value="Human Resources">Human Resources</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="JobRole">Job Role</label>
+                    <select id="JobRole" name="JobRole" required>
+                        <option value="Sales Executive">Sales Executive</option>
+                        <option value="Research Scientist">Research Scientist</option>
+                        <option value="Laboratory Technician">Laboratory Technician</option>
+                        <option value="Manufacturing Director">Manufacturing Director</option>
+                        <option value="Healthcare Representative">Healthcare Representative</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Sales Representative">Sales Representative</option>
+                        <option value="Research Director">Research Director</option>
+                        <option value="Human Resources">Human Resources</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Kanan -->
+            <div>
+                <div class="form-group">
+                    <label for="EnvironmentSatisfaction">Environment Satisfaction (1-4)</label>
+                    <input type="number" id="EnvironmentSatisfaction" name="EnvironmentSatisfaction" min="1" max="4"
+                        value="3" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="JobSatisfaction">Job Satisfaction (1-4)</label>
+                    <input type="number" id="JobSatisfaction" name="JobSatisfaction" min="1" max="4" value="3" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="JobInvolvement">Job Involvement (1-4)</label>
+                    <input type="number" id="JobInvolvement" name="JobInvolvement" min="1" max="4" value="3" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="WorkLifeBalance">Work Life Balance (1-4)</label>
+                    <input type="number" id="WorkLifeBalance" name="WorkLifeBalance" min="1" max="4" value="3" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="DistanceFromHome">Distance From Home (miles)</label>
+                    <input type="number" id="DistanceFromHome" name="DistanceFromHome" min="1" max="50" value="10"
+                        required>
+                </div>
+            </div>
+        </div>
+
+        <div
+            style="display: flex; gap: 10px; margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+            <button type="submit" class="btn btn-primary">🔮 Predict Attrition</button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
+        </div>
+    </form>
+
+    {% if result is defined and result is not none %}
+    {% if 'error' in result %}
+    <div class="result-box" style="background: #fef2f2; border-color: #f87171;">
+        <h3 style="color: #991b1b;">Terjadi Kesalahan</h3>
+        <div class="result-value" style="color: #b91c1c; font-size: 1rem;">{{ result.error }}</div>
+    </div>
+    {% else %}
+    <div class="result-box {% if 'RESIGN' in result.prediction %}is-resign{% else %}is-stay{% endif %}">
+        <h3>Hasil Prediksi</h3>
+        <div class="result-value">
+            {{ result.prediction }}
+        </div>
+        <p style="margin-top: 5px; font-size: 0.9rem; color: var(--text-secondary);">
+            Confidence / Probability: <strong>{{ result.confidence }}</strong>
+        </p>
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

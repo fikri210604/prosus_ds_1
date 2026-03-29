@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Home — PredictApp{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>Welcome to PredictApp 🚀</h1>
+    <p>
+        Aplikasi prediksi berbasis Machine Learning yang terintegrasi dengan MLflow
+        untuk experiment tracking. Masukkan data, dapatkan prediksi secara real-time.
+    </p>
+</div>
+
+<div class="feature-grid">
+    <div class="card">
+        <div class="feature-card">
+            <div class="feature-icon purple">📊</div>
+            <div>
+                <div class="card-title">Dashboard Analytics</div>
+                <p class="card-text">
+                    Lihat visualisasi data dan insight melalui dashboard interaktif
+                    yang terhubung dengan Looker Studio.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="feature-card">
+            <div class="feature-icon cyan">🤖</div>
+            <div>
+                <div class="card-title">Prediction Form</div>
+                <p class="card-text">
+                    Masukkan data input ke dalam form dan dapatkan hasil prediksi
+                    dari model Machine Learning yang sudah dilatih.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="feature-card">
+            <div class="feature-icon amber">📈</div>
+            <div>
+                <div class="card-title">MLflow Tracking</div>
+                <p class="card-text">
+                    Setiap eksperimen model tercatat otomatis di MLflow, termasuk
+                    parameter, metrik, dan artifact model.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
