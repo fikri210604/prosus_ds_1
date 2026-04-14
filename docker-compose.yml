@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # ======== 1. Web Application Container ========
+  web-app:
+    build: .
+    container_name: predictapp-streamlit
+    ports:
+      - "8501:8501"
+    environment:
+      - STREAMLIT_ENV=production
+    depends_on:
+      - mlflow-server
+
+  # ======== 2. MLflow Tracking UI Container ========
+  mlflow-server:
+    image: python:3.10-slim
+    container_name: predictapp-mlflow
+    ports:
+      - "5001:5001"
+    volumes:
+      # Pemasangan volume untuk memastikan UI server bisa membaca log lokal host
+      - ./mlruns:/app/mlruns
+      - ./mlflow.db:/app/mlflow.db
+      - ./model/artifacts:/app/model/artifacts
+    working_dir: /app
+    command: >
+      bash -c "pip install --no-cache-dir mlflow && mlflow server \
+      --backend-store-uri sqlite:///mlflow.db \
+      --default-artifact-root ./mlruns \
+      --host 0.0.0.0 --port 5001"

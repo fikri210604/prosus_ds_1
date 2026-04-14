@@ -1,0 +1,18 @@
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Ignore local MLflow experiment tracking databases and artifacts
+mlruns/
+mlflow.db
+
+# Git
+.git/
+.gitignore
+
+# Misc
+.ipynb_checkpoints/
+*.ipynb
