@@ -35,7 +35,9 @@ def render_prediction():
         for key in defaults:
             if key not in st.session_state.form_data:
                 st.session_state.form_data[key] = defaults[key]
-
+    
+    if 'prediction_result' not in st.session_state:
+        st.session_state.prediction_result = None
 
     def calculate_progress():
         completed = 0
@@ -85,8 +87,12 @@ def render_prediction():
 
         st.write("")
         if st.button("Lanjutkan ➡️ "):
-            next_step()
-            st.rerun()
+            if (st.session_state.form_data['MaritalStatus'] == "Pilih Status" or 
+                st.session_state.form_data['EducationField'] == "Pilih Bidang"):
+                st.error("⚠️ Mohon isi semua data (Status Pernikahan & Bidang Pendidikan) untuk melanjutkan.")
+            else:
+                next_step()
+                st.rerun()
 
     # ==============================
     # WIZARD: STEP 2
@@ -140,8 +146,14 @@ def render_prediction():
                 st.rerun()
         with col_n:
             if st.button("Selanjutnya ➡️ "):
-                next_step()
-                st.rerun()
+                if (st.session_state.form_data['JobRole'] == "Pilih Role" or 
+                    st.session_state.form_data['OverTime'] == "Pilih Status" or 
+                    st.session_state.form_data['BusinessTravel'] == "Pilih Status" or
+                    st.session_state.form_data['DistanceFromHome'] <= 0):
+                    st.error("⚠️ Mohon lengkapi semua isian. Jarak (Distance From Home) harus diisi > 0.")
+                else:
+                    next_step()
+                    st.rerun()
 
     # ==============================
     # WIZARD: STEP 3
@@ -189,8 +201,14 @@ def render_prediction():
                 st.rerun()
         with col_n:
             if st.button("Ke Ringkasan Akhir ➡️ "):
-                next_step()
-                st.rerun()
+                if (st.session_state.form_data['EnvironmentSatisfaction'] == "Pilih Skala" or
+                    st.session_state.form_data['JobSatisfaction'] == "Pilih Skala" or
+                    st.session_state.form_data['JobInvolvement'] == "Pilih Skala" or
+                    st.session_state.form_data['WorkLifeBalance'] == "Pilih Skala"):
+                    st.error("⚠️ Mohon tentukan skala 1-4 untuk semua survei HR untuk melanjutkan.")
+                else:
+                    next_step()
+                    st.rerun()
 
     # ==============================
     # WIZARD: STEP 4 (REVIEW & SUBMIT)
@@ -206,50 +224,57 @@ def render_prediction():
                 prev_step()
                 st.rerun()
         else:
-            st.success("Seluruh input telah dikumpulkan. Silakan panggil mesin ML untuk melihat hasilnya.")
-            
-            with st.expander("📝 Tampilkan Rangkuman Jawaban Saya", expanded=False):
-                summary_df = pd.DataFrame(
-                    list(st.session_state.form_data.items()), 
-                    columns=["Parameter", "Jawaban"]
-                )
-                st.table(summary_df)
-
-            st.write("")
-            col_b, col_n = st.columns([2, 5])
-            with col_b:
-                if st.button("⬅️ Revisi Data"):
-                    prev_step()
-                    st.rerun()
-            with col_n:
-                submit = st.button("🔮 Evaluasi Prediksi Attrition Sekarang", use_container_width=True)
-            
-            if submit:
-                # Preprocessing
-                form_payload = st.session_state.form_data.copy()
-                form_payload['EnvironmentSatisfaction'] = int(form_payload['EnvironmentSatisfaction'].split(" ")[0])
-                form_payload['JobSatisfaction'] = int(form_payload['JobSatisfaction'].split(" ")[0])
-                form_payload['JobInvolvement'] = int(form_payload['JobInvolvement'].split(" ")[0])
-                form_payload['WorkLifeBalance'] = int(form_payload['WorkLifeBalance'].split(" ")[0])
-
-                status_box = st.status("🛸 Menginisialisasi sistem prediksi...", expanded=True)
-                time.sleep(0.6)
-                status_box.write("📥 Memuat model Logistic Regression & MLflow Artifacts...")
-                time.sleep(0.8)
-                status_box.write("⚙️ Melakukan preprocessing data kuis...")
-                time.sleep(0.7)
-                status_box.write("🧠 Menghitung probabilitas (Confidence Score) Attrition...")
-                time.sleep(0.5)
-                status_box.update(label="✅ Analisa Selesai!", state="complete", expanded=False)
-
-                result = predict_single_data(form_payload)
+            if st.session_state.get('prediction_result') is None:
+                st.success("Seluruh input telah dikumpulkan. Silakan panggil mesin ML untuk melihat hasilnya.")
                 
+                with st.expander("📝 Tampilkan Rangkuman Jawaban Saya", expanded=False):
+                    summary_df = pd.DataFrame(
+                        list(st.session_state.form_data.items()), 
+                        columns=["Parameter", "Jawaban"]
+                    )
+                    st.table(summary_df)
+
+                st.write("")
+                col_b, col_n = st.columns([2, 5])
+                with col_b:
+                    if st.button("⬅️ Revisi Data"):
+                        prev_step()
+                        st.rerun()
+                with col_n:
+                    submit = st.button("🔮 Evaluasi Prediksi Attrition Sekarang", use_container_width=True, type="primary")
+                
+                if submit:
+                    # Preprocessing
+                    form_payload = st.session_state.form_data.copy()
+                    form_payload['EnvironmentSatisfaction'] = int(form_payload['EnvironmentSatisfaction'].split(" ")[0])
+                    form_payload['JobSatisfaction'] = int(form_payload['JobSatisfaction'].split(" ")[0])
+                    form_payload['JobInvolvement'] = int(form_payload['JobInvolvement'].split(" ")[0])
+                    form_payload['WorkLifeBalance'] = int(form_payload['WorkLifeBalance'].split(" ")[0])
+
+                    status_box = st.status("🛸 Menginisialisasi sistem prediksi...", expanded=True)
+                    time.sleep(0.6)
+                    status_box.write("📥 Memuat model Logistic Regression & MLflow Artifacts...")
+                    time.sleep(0.8)
+                    status_box.write("⚙️ Melakukan preprocessing data kuis...")
+                    time.sleep(0.7)
+                    status_box.write("🧠 Menghitung probabilitas (Confidence Score) Attrition...")
+                    time.sleep(0.5)
+                    status_box.update(label="✅ Analisa Selesai!", state="complete", expanded=False)
+
+                    result = predict_single_data(form_payload)
+                    st.session_state.prediction_result = result
+                    st.rerun()
+            else:
+                # Menampilkan Hasil yang Terekam
+                result = st.session_state.prediction_result
                 if "error" in result:
                     st.error(f"❌ Kesalahan sistem: {result['error']}")
                 else:
                     is_resign = "RESIGN" in result['prediction']
-                    if is_resign: st.snow()
-                    else: st.balloons()
+                    if 'celebrated' not in st.session_state:
+                        if is_resign: st.snow()
+                        else: st.balloons()
+                        st.session_state.celebrated = True
 
                     st.markdown(f"""
                     <div class="result-box fade-in" style="background: rgba(30, 41, 59, 0.8); border: 2px solid {'#f59e0b' if is_resign else '#10b981'}; border-radius: 16px; padding: 2rem; margin-top: 1.5rem;">
@@ -277,3 +302,21 @@ def render_prediction():
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
+                
+                # --- ACTION BUTTONS (LIKE GOOGLE FORM) ---
+                st.write("")
+                st.markdown("### Navigasi Lanjutan")
+                col_n1, col_n2 = st.columns(2)
+                with col_n1:
+                    if st.button("📝 Edit Data Karyawan (Kembali)", use_container_width=True):
+                        st.session_state.prediction_result = None
+                        if 'celebrated' in st.session_state: del st.session_state.celebrated
+                        prev_step()
+                        st.rerun()
+                with col_n2:
+                    if st.button("➕ Mulai Form Baru", use_container_width=True, type="primary"):
+                        st.session_state.prediction_result = None
+                        if 'celebrated' in st.session_state: del st.session_state.celebrated
+                        st.session_state.step = 1
+                        st.session_state.form_data = defaults.copy()
+                        st.rerun()
