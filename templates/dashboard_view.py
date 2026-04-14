@@ -8,17 +8,6 @@ def render_dashboard(data):
     
     if data:
         metrics = data['metrics']
-        
-        # Row 1: Key Metrics (Native for Premium Feel)
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.metric("Total Employees", f"{metrics['total_employees']:,}")
-        with col2:
-            st.metric("Attrition Count", f"{metrics['attrition_count']:,}")
-        with col3:
-            st.metric("Attrition Rate", f"{metrics['attrition_rate']}%")
-        
-        st.divider()
 
         # Row 2: Deep Analysis (Looker Studio Embed)
         st.markdown("#### 🔗 Deep Analytics Report")

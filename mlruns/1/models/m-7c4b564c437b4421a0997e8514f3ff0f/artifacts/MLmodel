@@ -1,0 +1,23 @@
+artifact_path: file:D:/tugas-kuliah/SEMESTER 6/PROSUS DS/project_1/predict_app/mlruns/1/models/m-7c4b564c437b4421a0997e8514f3ff0f/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.7
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.10.1
+model_id: m-7c4b564c437b4421a0997e8514f3ff0f
+model_size_bytes: 751
+model_uuid: m-7c4b564c437b4421a0997e8514f3ff0f
+prompts: null
+run_id: cd40443d85d24e16af063e08323e91d5
+utc_time_created: '2026-04-14 16:02:49.002426'
