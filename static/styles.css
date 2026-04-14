@@ -123,12 +123,10 @@ div.stWarning {
 }
 
 /* --- SIDEBAR NAVIGATION (RADIO) STYLING --- */
-/* Sembunyikan lingkaran radio bawaan Streamlit secara spesifik di sidebar */
 [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label > div:first-of-type {
     display: none !important;
 }
 
-/* Modifikasi kotak radio menjadi tombol modern (Pill) */
 [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label {
     background-color: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -140,14 +138,12 @@ div.stWarning {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-/* Efek saat memegang tombol (Hover) */
 [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label:hover {
     background-color: rgba(255, 255, 255, 0.15);
     border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px) translateX(4px);
 }
 
-/* Teks Radio Option */
 [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label p {
     font-size: 1.1rem;
     font-weight: 500;
@@ -155,7 +151,6 @@ div.stWarning {
     margin: 0;
 }
 
-/* State Aktif (Saat halaman dipilih) */
 [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label[data-checked="true"] {
     background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
     border: none;
@@ -166,3 +161,208 @@ div.stWarning {
     color: #ffffff;
     font-weight: 700;
 }
+
+
+/* =========================================
+   HOME PAGE SPECIFIC STYLES
+   ========================================= */
+
+/* Hero Section */
+.hero-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 1rem 2rem 1rem;
+    animation: fadeIn 1s ease-out;
+}
+.hero-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(6, 182, 212, 0.2));
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    color: #a5b4fc;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #818cf8, #06b6d4, #34d399);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.3rem;
+    line-height: 1.2;
+}
+.hero-subtitle {
+    font-size: 1.15rem;
+    color: #94a3b8;
+    max-width: 650px;
+    margin: 0 auto 2rem auto;
+    line-height: 1.7;
+}
+
+/* Feature Cards */
+.feature-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 16px 16px 0 0;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+.feature-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+.feature-card:hover::before {
+    opacity: 1;
+}
+.feature-card.c1::before { background: linear-gradient(90deg, #6366f1, #818cf8); }
+.feature-card.c2::before { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+.feature-card.c3::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+.feature-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 0.5rem;
+}
+.feature-desc {
+    font-size: 0.92rem;
+    color: #94a3b8;
+    line-height: 1.65;
+}
+
+/* Workflow Steps */
+.workflow-section {
+    margin: 3rem 0 0 0;
+    text-align: center;
+}
+.workflow-section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 0.3rem;
+}
+.workflow-section-sub {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+}
+.step-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+.step-card:hover {
+    background: rgba(255,255,255,0.06);
+    transform: translateY(-3px);
+}
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4f46e5, #06b6d4);
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+}
+.step-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #cbd5e1;
+}
+.step-sublabel {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+/* Model Callout */
+.model-callout {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(6, 182, 212, 0.08));
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 16px;
+    padding: 1.8rem 2rem;
+    margin: 2.5rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+.callout-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+.callout-content h4 {
+    color: #a5b4fc;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+.callout-content p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Tech Stack */
+.tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 0.5rem 0 2rem 0;
+}
+.tech-badge {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    color: #94a3b8;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+.tech-badge:hover {
+    background: rgba(255,255,255,0.1);
+    color: #e2e8f0;
+    transform: translateY(-2px);
+}
+
+/* Animation Delays */
+.anim-delay-1 { animation: fadeIn 0.8s ease-out 0.1s both; }
+.anim-delay-2 { animation: fadeIn 0.8s ease-out 0.25s both; }
+.anim-delay-3 { animation: fadeIn 0.8s ease-out 0.4s both; }
+.anim-delay-4 { animation: fadeIn 0.8s ease-out 0.55s both; }
